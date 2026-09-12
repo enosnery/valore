@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Valore - Usuário</title><link rel="stylesheet" href="/css/style.css"></head>
+<body><header class="topbar"><a href="/home">Valore</a></header>
+<main class="container narrow"><a class="back-link" href="/usuarios">← Usuários</a><h1 th:text="${usuario.id == null ? 'Novo usuário' : 'Editar usuário'}"></h1>
+<form class="form-card" th:action="@{/usuarios/salvar}" th:object="${usuario}" method="post"><input type="hidden" th:field="*{id}">
+<label for="nome">Nome</label><input id="nome" type="text" th:field="*{nome}"><small class="field-error" th:errors="*{nome}"></small>
+<label for="login">Login</label><input id="login" type="text" th:field="*{login}"><small class="field-error" th:errors="*{login}"></small>
+<label for="senha">Senha</label><input id="senha" type="password" th:field="*{senha}"><small class="field-error" th:errors="*{senha}"></small>
+<label for="tipo">Tipo de usuário</label><select id="tipo" th:field="*{tipo}"><option value="">Selecione</option><option th:each="tipo : ${tiposUsuario}" th:value="${tipo}" th:text="${tipo}"></option></select><small class="field-error" th:errors="*{tipo}"></small>
+<label for="fornecedor">Fornecedor</label><select id="fornecedor" th:field="*{fornecedor}"><option value="">Nenhum</option><option th:each="fornecedor : ${fornecedores}" th:value="${fornecedor.id}" th:text="${fornecedor.razaoSocial}"></option></select><small class="field-error" th:errors="*{fornecedor}"></small>
+<div class="form-actions"><a class="button" href="/usuarios">Cancelar</a><button class="button primary" type="submit">Salvar</button></div></form></main></body></html>

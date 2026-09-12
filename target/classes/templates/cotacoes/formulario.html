@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Valore - Nova cotação</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="topbar">
+    <a href="/home">Valore</a>
+    <form th:action="@{/logout}" method="post"><button class="link-button" type="submit">Sair</button></form>
+</header>
+<main class="container">
+    <div class="page-heading">
+        <div><a class="back-link" href="/cotacoes">← Minhas cotações</a><h1>Cotação #[[${cotacao.id}]]</h1></div>
+        <form th:action="@{/cotacoes/{id}/salvar(id=${cotacao.id})}" method="post">
+            <button class="button primary" type="submit">Salvar cotação</button>
+        </form>
+    </div>
+    <div class="alert success" th:if="${sucesso}" th:text="${sucesso}"></div>
+    <div class="alert error" th:if="${erro}" th:text="${erro}"></div>
+    <div class="quote-layout">
+        <section class="panel">
+            <h2>Itens da cotação</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Produto</th><th>Fornecedor</th><th>Valor</th><th>Validade</th><th></th></tr></thead>
+                    <tbody>
+                    <tr th:each="item : ${cotacao.itens}">
+                        <td th:text="${item.tabelaPreco.produto.nome}"></td>
+                        <td th:text="${item.tabelaPreco.fornecedor.razaoSocial}"></td>
+                        <td th:text="${#numbers.formatDecimal(item.tabelaPreco.valor, 1, 2)}"></td>
+                        <td th:text="${item.tabelaPreco.validadeValor}"></td>
+                        <td><form th:action="@{/cotacoes/{cotacaoId}/itens/{tabelaPrecoId}/remover(cotacaoId=${cotacao.id},tabelaPrecoId=${item.tabelaPreco.id})}" method="post"><button class="button small danger" type="submit">Remover</button></form></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(cotacao.itens)}"><td colspan="5" class="empty">Nenhum item selecionado.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section class="panel">
+            <h2>Tabelas de preço vigentes</h2>
+            <p class="muted">Selecione produtos de qualquer fornecedor. O mesmo item não pode ser adicionado duas vezes.</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Produto</th><th>SKU</th><th>Fornecedor</th><th>Valor</th><th>Até</th><th></th></tr></thead>
+                    <tbody>
+                    <tr th:each="tabela : ${itensDisponiveis}">
+                        <td th:text="${tabela.produto.nome}"></td>
+                        <td th:text="${tabela.produto.sku}"></td>
+                        <td th:text="${tabela.fornecedor.razaoSocial}"></td>
+                        <td th:text="${#numbers.formatDecimal(tabela.valor, 1, 2)}"></td>
+                        <td th:text="${tabela.validadeValor}"></td>
+                        <td th:if="${!itensSelecionados.contains(tabela.id)}"><form th:action="@{/cotacoes/{cotacaoId}/itens/{tabelaPrecoId}(cotacaoId=${cotacao.id},tabelaPrecoId=${tabela.id})}" method="post"><button class="button small primary" type="submit">Adicionar</button></form></td>
+                        <td th:if="${itensSelecionados.contains(tabela.id)}"><span class="muted">Adicionado</span></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(itensDisponiveis)}"><td colspan="6" class="empty">Nenhum preço vigente disponível.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

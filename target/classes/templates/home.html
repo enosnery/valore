@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Valore - Início</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="topbar">
+    <strong>Valore</strong>
+    <form th:action="@{/logout}" method="post"><button class="link-button" type="submit">Sair</button></form>
+</header>
+<main class="container">
+    <h1>Página principal</h1>
+    <p class="muted">Selecione uma opção para começar.</p>
+    <section class="menu-grid">
+        <a class="menu-card" href="/usuarios"><span>👤</span><strong>Usuários</strong><small>Consultar e gerenciar usuários, tipos e fornecedores vinculados</small></a>
+        <a class="menu-card" href="/cotacoes"><span>📝</span><strong>Cotações</strong><small>Consultar, editar e criar cotações</small></a>
+    </section>
+</main>
+</body>
+</html>

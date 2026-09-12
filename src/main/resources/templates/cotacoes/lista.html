@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Valore - Cotações</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="topbar">
+    <a href="/home">Valore</a>
+    <form th:action="@{/logout}" method="post"><button class="link-button" type="submit">Sair</button></form>
+</header>
+<main class="container">
+    <div class="page-heading">
+        <div><a class="back-link" href="/home">← Início</a><h1>Minhas cotações</h1></div>
+        <a class="button primary" href="/cotacoes/nova">Nova cotação</a>
+    </div>
+    <div class="alert success" th:if="${sucesso}" th:text="${sucesso}"></div>
+    <div class="alert error" th:if="${erro}" th:text="${erro}"></div>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Código</th><th>Criada em</th><th>Itens</th><th>Ações</th></tr></thead>
+            <tbody>
+            <tr th:each="cotacao : ${cotacoes}">
+                <td th:text="${cotacao.id}"></td>
+                <td th:text="${#temporals.format(cotacao.criadaEm, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${#lists.size(cotacao.itens)}"></td>
+                <td class="actions">
+                    <a class="button small" th:href="@{/cotacoes/{id}(id=${cotacao.id})}">Editar</a>
+                    <form th:action="@{/cotacoes/{id}/excluir(id=${cotacao.id})}" method="post">
+                        <button class="button small danger" type="submit">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(cotacoes)}"><td colspan="4" class="empty">Nenhuma cotação cadastrada.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

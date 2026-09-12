@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ValoreApplication<valore>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.valore.ValoreApplication",
+            "projectName": "valore",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
