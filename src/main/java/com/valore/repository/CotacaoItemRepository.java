@@ -5,7 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CotacaoItemRepository extends JpaRepository<CotacaoItem, Long> {
 
-    boolean existsByCotacaoIdAndTabelaPrecoId(Long cotacaoId, Long tabelaPrecoId);
+    boolean existsByCotacaoIdAndItemTabelaPrecoId(Long cotacaoId, Long itemTabelaPrecoId);
 
-    void deleteByCotacaoIdAndTabelaPrecoId(Long cotacaoId, Long tabelaPrecoId);
+    void deleteByCotacaoIdAndItemTabelaPrecoId(Long cotacaoId, Long itemTabelaPrecoId);
+
+    boolean existsByItemTabelaPrecoTabelaPrecoId(Long tabelaPrecoId);
+
+    boolean existsByItemTabelaPrecoId(Long itemTabelaPrecoId);
 }

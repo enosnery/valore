@@ -12,7 +12,7 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "cotacao_itens",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"cotacao_id", "tabela_preco_id"}))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"cotacao_id", "item_tabela_preco_id"}))
 public class CotacaoItem {
 
     @Id
@@ -24,13 +24,13 @@ public class CotacaoItem {
     private Cotacao cotacao;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "tabela_preco_id", nullable = false)
-    private TabelaPreco tabelaPreco;
+    @JoinColumn(name = "item_tabela_preco_id", nullable = false)
+    private ItemTabelaPreco itemTabelaPreco;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Cotacao getCotacao() { return cotacao; }
     public void setCotacao(Cotacao cotacao) { this.cotacao = cotacao; }
-    public TabelaPreco getTabelaPreco() { return tabelaPreco; }
-    public void setTabelaPreco(TabelaPreco tabelaPreco) { this.tabelaPreco = tabelaPreco; }
+    public ItemTabelaPreco getItemTabelaPreco() { return itemTabelaPreco; }
+    public void setItemTabelaPreco(ItemTabelaPreco itemTabelaPreco) { this.itemTabelaPreco = itemTabelaPreco; }
 }

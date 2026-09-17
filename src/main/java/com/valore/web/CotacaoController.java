@@ -54,13 +54,13 @@ public class CotacaoController {
         return carregarTela(cotacao, usuario.getId(), model);
     }
 
-    @PostMapping("/{cotacaoId}/itens/{tabelaPrecoId}")
-    public String adicionar(@PathVariable Long cotacaoId, @PathVariable Long tabelaPrecoId,
+    @PostMapping("/{cotacaoId}/itens/{itemTabelaPrecoId}")
+    public String adicionar(@PathVariable Long cotacaoId, @PathVariable Long itemTabelaPrecoId,
                             HttpSession session, RedirectAttributes attributes) {
         Usuario usuario = usuarioLogado(session);
         try {
             validarComprador(usuario);
-            cotacaoService.adicionarItem(cotacaoId, usuario.getId(), tabelaPrecoId);
+            cotacaoService.adicionarItem(cotacaoId, usuario.getId(), itemTabelaPrecoId);
             attributes.addFlashAttribute("sucesso", "Item adicionado à cotação.");
         } catch (IllegalArgumentException exception) {
             attributes.addFlashAttribute("erro", exception.getMessage());
@@ -97,13 +97,13 @@ public class CotacaoController {
         return "redirect:/cotacoes";
     }
 
-    @PostMapping("/{cotacaoId}/itens/{tabelaPrecoId}/remover")
-    public String remover(@PathVariable Long cotacaoId, @PathVariable Long tabelaPrecoId,
+    @PostMapping("/{cotacaoId}/itens/{itemTabelaPrecoId}/remover")
+    public String remover(@PathVariable Long cotacaoId, @PathVariable Long itemTabelaPrecoId,
                           HttpSession session, RedirectAttributes attributes) {
         Usuario usuario = usuarioLogado(session);
         try {
             validarComprador(usuario);
-            cotacaoService.removerItem(cotacaoId, usuario.getId(), tabelaPrecoId);
+            cotacaoService.removerItem(cotacaoId, usuario.getId(), itemTabelaPrecoId);
             attributes.addFlashAttribute("sucesso", "Item removido da cotação.");
         } catch (IllegalArgumentException exception) {
             attributes.addFlashAttribute("erro", exception.getMessage());
@@ -127,7 +127,7 @@ public class CotacaoController {
 
     private String carregarTela(Cotacao cotacao, Long usuarioId, Model model) {
         Set<Long> selecionados = cotacao.getItens().stream()
-                .map(item -> item.getTabelaPreco().getId())
+                .map(item -> item.getItemTabelaPreco().getId())
                 .collect(Collectors.toCollection(HashSet::new));
         model.addAttribute("cotacao", cotacao);
         model.addAttribute("itensDisponiveis", cotacaoService.listarItensVigentes());

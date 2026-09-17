@@ -2,12 +2,12 @@ package com.valore.service;
 
 import com.valore.domain.Cotacao;
 import com.valore.domain.CotacaoItem;
-import com.valore.domain.TabelaPreco;
+import com.valore.domain.ItemTabelaPreco;
 import com.valore.domain.TipoUsuario;
 import com.valore.domain.Usuario;
 import com.valore.repository.CotacaoItemRepository;
 import com.valore.repository.CotacaoRepository;
-import com.valore.repository.TabelaPrecoRepository;
+import com.valore.repository.ItemTabelaPrecoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,14 +19,14 @@ public class CotacaoService {
 
     private final CotacaoRepository cotacaoRepository;
     private final CotacaoItemRepository itemRepository;
-    private final TabelaPrecoRepository tabelaPrecoRepository;
+    private final ItemTabelaPrecoRepository itemTabelaPrecoRepository;
 
     public CotacaoService(CotacaoRepository cotacaoRepository,
                           CotacaoItemRepository itemRepository,
-                          TabelaPrecoRepository tabelaPrecoRepository) {
+                          ItemTabelaPrecoRepository itemTabelaPrecoRepository) {
         this.cotacaoRepository = cotacaoRepository;
         this.itemRepository = itemRepository;
-        this.tabelaPrecoRepository = tabelaPrecoRepository;
+        this.itemTabelaPrecoRepository = itemTabelaPrecoRepository;
     }
 
     @Transactional
@@ -66,30 +66,34 @@ public class CotacaoService {
     }
 
     @Transactional
-    public void adicionarItem(Long cotacaoId, Long usuarioId, Long tabelaPrecoId) {
+    public void adicionarItem(Long cotacaoId, Long usuarioId, Long itemTabelaPrecoId) {
         Cotacao cotacao = buscarDoUsuario(cotacaoId, usuarioId);
-        TabelaPreco tabelaPreco = tabelaPrecoRepository.findById(tabelaPrecoId)
+        ItemTabelaPreco itemTabelaPreco = itemTabelaPrecoRepository.findById(itemTabelaPrecoId)
                 .orElseThrow(() -> new IllegalArgumentException("Item de tabela de preço não encontrado."));
-        if (tabelaPreco.getValidadeValor().isBefore(LocalDate.now())) {
+        if (!itemTabelaPreco.getTabelaPreco().isAtiva()) {
+            throw new IllegalArgumentException("Esta tabela de preço não está ativa.");
+        }
+        if (itemTabelaPreco.getValidadeValor().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("O valor selecionado está vencido.");
         }
-        if (!itemRepository.existsByCotacaoIdAndTabelaPrecoId(cotacaoId, tabelaPrecoId)) {
+        if (!itemRepository.existsByCotacaoIdAndItemTabelaPrecoId(cotacaoId, itemTabelaPrecoId)) {
             CotacaoItem item = new CotacaoItem();
             item.setCotacao(cotacao);
-            item.setTabelaPreco(tabelaPreco);
+            item.setItemTabelaPreco(itemTabelaPreco);
             itemRepository.save(item);
         }
     }
 
     @Transactional
-    public void removerItem(Long cotacaoId, Long usuarioId, Long tabelaPrecoId) {
+    public void removerItem(Long cotacaoId, Long usuarioId, Long itemTabelaPrecoId) {
         buscarDoUsuario(cotacaoId, usuarioId);
-        itemRepository.deleteByCotacaoIdAndTabelaPrecoId(cotacaoId, tabelaPrecoId);
+        itemRepository.deleteByCotacaoIdAndItemTabelaPrecoId(cotacaoId, itemTabelaPrecoId);
     }
 
     @Transactional(readOnly = true)
-    public List<TabelaPreco> listarItensVigentes() {
-        return tabelaPrecoRepository
-                .findByValidadeValorGreaterThanEqualOrderByFornecedorRazaoSocialAscProdutoNomeAsc(LocalDate.now());
+    public List<ItemTabelaPreco> listarItensVigentes() {
+        return itemTabelaPrecoRepository
+                .findByTabelaPrecoAtivaTrueAndValidadeValorGreaterThanEqualOrderByTabelaPrecoFornecedorRazaoSocialAscProdutoNomeAsc(
+                        LocalDate.now());
     }
 }

@@ -4,11 +4,15 @@ import com.valore.domain.TabelaPreco;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TabelaPrecoRepository extends JpaRepository<TabelaPreco, Long> {
 
-    List<TabelaPreco> findByValidadeValorGreaterThanEqualOrderByFornecedorRazaoSocialAscProdutoNomeAsc(
-            java.time.LocalDate data);
+    List<TabelaPreco> findByFornecedorIdOrderByNomeAsc(Long fornecedorId);
 
-    boolean existsByFornecedorIdAndProdutoId(Long fornecedorId, Long produtoId);
+    Optional<TabelaPreco> findByIdAndFornecedorId(Long id, Long fornecedorId);
+
+    List<TabelaPreco> findByFornecedorIdAndAtivaTrueAndIdNot(Long fornecedorId, Long id);
+
+    boolean existsByFornecedorId(Long fornecedorId);
 }
