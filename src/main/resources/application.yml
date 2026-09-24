@@ -2,7 +2,7 @@ spring:
   application:
     name: valore
   datasource:
-    url: jdbc:postgresql://localhost:5432/valore
+    url: jdbc:postgresql://localhost:5432/valore?currentSchema=valore
     driver-class-name: org.postgresql.Driver
     username: valore_user
     password: V97862345789
@@ -10,7 +10,9 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: valore
   thymeleaf:
     cache: false
 
